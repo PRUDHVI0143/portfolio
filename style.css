@@ -212,7 +212,6 @@ body {
 
 /* Typography Adjustments */
 h1, h2, h3, nav a, .logo {
-    text-transform: uppercase;
     font-weight: 800;
     letter-spacing: 1px;
 }
