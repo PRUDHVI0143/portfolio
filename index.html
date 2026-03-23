@@ -9,12 +9,19 @@
 </head>
 <body>
     <div id="scroll-progress"></div>
+    <div class="cosmos-bg">
+        <canvas id="milkyway" style="position:fixed;inset:0;width:100%;height:100%;z-index:-1;"></canvas>
+        <div class="cosmos-layer layer-1"></div>
+        <div class="cosmos-layer layer-2"></div>
+        <div class="cosmos-layer layer-3"></div>
+    </div>
     <div id="cursor"></div>
     <div id="cursor-blur"></div>
     
     <nav>
         <div class="logo">PRUDHVIRAJ.</div>
         <ul class="nav-links">
+            <li><a href="#about">ABOUT</a></li>
             <li><a href="#skills">SKILLS</a></li>
             <li><a href="#projects">PROJECTS</a></li>
             <li><a href="#education">EDUCATION</a></li>
@@ -25,9 +32,9 @@
 
     <section class="hero animate" id="home">
         <h1>PRUDHVI RAJ <br> <span class="gradient-text">DANDA.</span></h1>
-        <p>Software Developer specializing in building scalable systems and intelligent applications with Python, Django, and Machine Learning.</p>
+        <p>Architecting cosmic-scale systems and intelligent applications with Python, Django, and Machine Learning.</p>
         <div class="cta">
-            <a href="Prudhvi_Raj_CV.pdf" download="Prudhvi_Raj_CV.pdf" target="_blank" class="btn">DOWNLOAD CV ↓</a>
+            <a href="Prudhvi_Raj_CV.pdf" download="Prudhvi_Raj_CV.pdf" target="_blank" class="btn">MISSION DETAILS ↓</a>
         </div>
         <div class="scroll-indicator">
             <span>SCROLL</span>
@@ -36,25 +43,68 @@
         <div class="bg-text">2026</div>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.net.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
-    <script>
-    VANTA.NET({
-      el: "#home",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.00,
-      minWidth: 200.00,
-      scale: 1.00,
-      scaleMobile: 1.00,
-      color: 0x9f200d,
-      backgroundColor: 0x27,
-      points: 16.00,
-      maxDistance: 26.00,
-      spacing: 16.00
-    })
-    </script>
+
+    <section class="section" id="about">
+        <span class="section-label">// INTRODUCTION</span>
+        <h2 class="section-title">ABOUT ME.</h2>
+        <div class="card animate" style="padding: 3.5rem; background: rgba(15, 15, 25, 0.4); backdrop-filter: blur(10px); max-width: 900px; margin: 0 auto; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);">
+            <div style="margin-bottom: 2.5rem; text-align: center;">
+                <div class="about-profile-container animate stagger-1">
+                    <img src="profile.jpg" alt="Prudhvi Raj Danda" class="about-profile">
+                </div>
+                <h3 style="font-size: 2.8rem; color: #fff; margin: 0; letter-spacing: -1px; font-weight: 800; text-transform: uppercase;">Prudhvi Raj <span class="gradient-text">Danda</span></h3>
+                <h4 style="font-size: 1rem; color: var(--accent-sec); margin-top: 0.8rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 600;">Full-Stack Engineer & ML Enthusiast</h4>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 4rem; align-items: start; border-top: 1px solid var(--border); padding-top: 2rem;">
+                
+                <!-- Left Column: Biography -->
+                <div style="flex: 1 1 400px; color: var(--text-sec); line-height: 1.8; font-size: 1.05rem;">
+                    <p style="margin-bottom: 1.5rem;">As a dedicated Computer Science Engineering student, I specialize in architecting scalable backend systems and intelligent <strong style="color: #fff;">Machine Learning</strong> models. My technical expertise bridges the gap between raw data and intuitive user experiences, empowering modern web applications with seamless, high-performance functionality.</p>
+                    <p>I am deeply driven by a philosophy of continuous learning. Whether it is deploying diagnostic logic engines, training classification algorithms, or optimizing real-time game states, I approach every challenge with meticulous problem-solving, adaptability, and an eye for cutting-edge <strong style="color: var(--accent-primary);">Full-Stack architecture</strong>.</p>
+                </div>
+
+                <!-- Right Column: Highlights & Soft Skills -->
+                <div style="flex: 1 1 250px; display: flex; flex-direction: column; gap: 2.5rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1.2rem; color: #fff; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; font-weight: 700;">Core Competencies</h4>
+                        <div class="tech-tags" style="margin: 0; gap: 0.6rem;">
+                            <span class="tech-tag" style="background: rgba(138, 43, 226, 0.05); border: 1px solid rgba(138, 43, 226, 0.3); padding: 0.4rem 0.8rem;">Leadership</span>
+                            <span class="tech-tag" style="background: rgba(138, 43, 226, 0.05); border: 1px solid rgba(138, 43, 226, 0.3); padding: 0.4rem 0.8rem;">Event Management</span>
+                            <span class="tech-tag" style="background: rgba(138, 43, 226, 0.05); border: 1px solid rgba(138, 43, 226, 0.3); padding: 0.4rem 0.8rem;">Adaptability</span>
+                            <span class="tech-tag" style="background: rgba(138, 43, 226, 0.05); border: 1px solid rgba(138, 43, 226, 0.3); padding: 0.4rem 0.8rem;">Algorithms</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 style="margin-bottom: 1.5rem; color: #fff; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; font-weight: 700;">Distinctions</h4>
+                        <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+                            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                                <div style="background: rgba(138, 43, 226, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(138, 43, 226, 0.2);">
+                                    <i class="fas fa-certificate" style="color: var(--accent-primary); font-size: 1.1rem; margin: 0;"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <span style="display: block; color: #fff; font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.5px;">fCC Certification</span>
+                                    <span style="display: block; font-size: 0.85rem; color: var(--text-sec); line-height: 1.5;">Recognized for rigorous coding proficiency and problem-solving (Sep 2024).</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                                <div style="background: rgba(138, 43, 226, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(138, 43, 226, 0.2);">
+                                    <i class="fas fa-hands-helping" style="color: var(--accent-primary); font-size: 1.1rem; margin: 0;"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <span style="display: block; color: #fff; font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.5px;">Active NSS Member</span>
+                                    <span style="display: block; font-size: 0.85rem; color: var(--text-sec); line-height: 1.5;">Dedicated to community service and social impact initiatives (Nov 2024).</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="section" id="skills">
         <span class="section-label">// MY SKILLS</span>
         <h2 class="section-title">TECHNICAL EXPERTISE.</h2>
@@ -201,7 +251,13 @@
 
     <section class="section" id="certifications">
         <span class="section-label">// CERTIFICATIONS</span>
-        <h2 class="section-title">My Certifications.</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2 class="section-title" style="margin-bottom: 0;">My Certifications.</h2>
+            <div style="display: flex; gap: 0.5rem; z-index: 100000; position: relative;">
+                <button class="gravity-btn" onclick="triggerGravity()">Drop!</button>
+                <button class="gravity-btn" onclick="resetGravity()">Reset</button>
+            </div>
+        </div>
         <div class="grid">
             <div class="card cert-card animate stagger-1">
                 <div class="cert-img-wrapper" onclick="openCertModal(0)">
@@ -449,6 +505,8 @@
         <div id="modal-caption" class="cert-modal-caption"></div>
     </div>
 
+    <script src="milkyway.js"></script>
+    <script src="gravity-effect.js"></script>
     <script src="main.js"></script>
 </body>
 </html>
