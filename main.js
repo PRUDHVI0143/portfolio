@@ -852,21 +852,21 @@ window.toggleProjectCard = function(card, projectId, e) {
     if (window.isGravityOn) return;
     
     const allCards = document.querySelectorAll('.project-card');
-    const isAlreadyActive = card.classList.contains('active');
+    const isAlreadyActive = card.classList.contains('project-tapped');
 
-    allCards.forEach(c => c.classList.remove('active'));
+    allCards.forEach(c => c.classList.remove('project-tapped'));
 
     if (isAlreadyActive) {
         openProjectModal(projectId);
     } else {
-        card.classList.add('active');
+        card.classList.add('project-tapped');
     }
 };
 
 // Close active project cards when clicking outside
 document.addEventListener('click', (e) => {
     if (!e.target.closest('.project-card')) {
-        document.querySelectorAll('.project-card').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.project-card').forEach(c => c.classList.remove('project-tapped'));
     }
 });
 

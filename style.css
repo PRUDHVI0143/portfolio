@@ -477,7 +477,7 @@ nav {
 }
 
 .project-card:hover .project-info,
-.project-card.active .project-info {
+.project-card.project-tapped .project-info {
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
@@ -485,7 +485,7 @@ nav {
 }
 
 .project-card:hover .project-tap-badge,
-.project-card.active .project-tap-badge {
+.project-card.project-tapped .project-tap-badge {
     opacity: 0;
     transform: translate(-50%, 15px);
 }
