@@ -848,12 +848,27 @@ window.closeProjectModal = function() {
     }
 };
 
-window.closeProjectModalOnBg = function(e) {
-    const modal = document.getElementById('project-modal');
-    if (e.target === modal) {
-        closeProjectModal();
+window.toggleProjectCard = function(card, projectId, e) {
+    if (window.isGravityOn) return;
+    
+    const allCards = document.querySelectorAll('.project-card');
+    const isAlreadyActive = card.classList.contains('active');
+
+    allCards.forEach(c => c.classList.remove('active'));
+
+    if (isAlreadyActive) {
+        openProjectModal(projectId);
+    } else {
+        card.classList.add('active');
     }
 };
+
+// Close active project cards when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.project-card')) {
+        document.querySelectorAll('.project-card').forEach(c => c.classList.remove('active'));
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     createSpacePlants();

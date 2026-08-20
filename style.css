@@ -400,33 +400,87 @@ nav {
 .project-card {
     padding: 0;
     aspect-ratio: 16/10;
+    position: relative;
+    overflow: hidden;
 }
 
 .project-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(1);
-    transition: 0.6s ease;
+    filter: brightness(0.9) contrast(1.05);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
 }
 
-.project-card:hover .project-img {
-    filter: grayscale(0);
+.project-card:hover .project-img,
+.project-card.active .project-img {
+    filter: brightness(1.05) contrast(1.1);
+    transform: scale(1.06);
+}
+
+.project-tap-badge {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(8, 8, 20, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(138, 43, 226, 0.6);
+    color: #ffffff;
+    padding: 0.45rem 1.1rem;
+    border-radius: 25px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(138, 43, 226, 0.4);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: none;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+}
+
+.project-tap-badge i {
+    color: var(--star-gold);
+    font-size: 0.85rem;
+    margin: 0;
 }
 
 .project-info {
     position: absolute;
-    bottom: 0;
+    inset: 0;
     width: 100%;
-    padding: 2rem;
-    background: linear-gradient(to top, rgba(3, 3, 14, 0.98) 0%, rgba(5, 5, 20, 0.88) 75%, transparent 100%);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    opacity: 0.95;
+    height: 100%;
+    padding: 1.75rem;
+    background: linear-gradient(to top, rgba(2, 2, 10, 0.98) 0%, rgba(4, 4, 18, 0.92) 80%, rgba(0, 0, 0, 0.5) 100%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease;
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 3;
 }
 
-.project-card:hover .project-info {
+.project-card:hover .project-info,
+.project-card.active .project-info {
+    transform: translateY(0);
     opacity: 1;
-    background: linear-gradient(to top, rgba(2, 2, 10, 0.99) 0%, rgba(4, 4, 16, 0.92) 80%, rgba(0,0,0,0.4) 100%);
+    pointer-events: auto;
+}
+
+.project-card:hover .project-tap-badge,
+.project-card.active .project-tap-badge {
+    opacity: 0;
+    transform: translate(-50%, 15px);
 }
 
 .project-info h3 {
