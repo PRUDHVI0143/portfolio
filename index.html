@@ -6,15 +6,30 @@
     <title>Prudhvi raj danda | Full Stack Engineer</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 </head>
 <body>
     <div id="scroll-progress"></div>
     <div class="cosmos-bg">
         <canvas id="milkyway" style="position:fixed;inset:0;width:100%;height:100%;z-index:-1;"></canvas>
+        <canvas id="three-canvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
         <div class="cosmos-layer layer-1"></div>
         <div class="cosmos-layer layer-2"></div>
         <div class="cosmos-layer layer-3"></div>
     </div>
+    <!-- SVG Surface Shaders for Photorealistic Planet Detailing -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="planet-noise" x="0%" y="0%" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="5" result="noise" />
+                <feDiffuseLighting in="noise" lighting-color="#ffffff" surfaceScale="2" result="light">
+                    <feDistantLight azimuth="45" elevation="60" />
+                </feDiffuseLighting>
+                <feComposite in="SourceGraphic" in2="light" operator="arithmetic" k1="1" k2="0.3" k3="0.4" k4="0" />
+            </filter>
+        </defs>
+    </svg>
     <div id="cursor"></div>
     <div id="cursor-blur"></div>
     
@@ -42,8 +57,6 @@
         </div>
         <div class="bg-text">2026</div>
     </section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 
     <section class="section" id="about">
         <span class="section-label">// INTRODUCTION</span>
@@ -157,7 +170,7 @@
         <span class="section-label">// RECENT WORK</span>
         <h2 class="section-title">FEATURED PROJECTS.</h2>
         <div class="grid">
-            <div class="card project-card animate stagger-2">
+            <div class="card project-card animate stagger-2" style="cursor: pointer;" onclick="openProjectModal('fake-account-detection')">
                 <img src="fake_account_detection.png" alt="Fake Account Detection Mockup" class="project-img">
                 <div class="project-info">
                     <h3 style="font-size: 1.25rem; text-transform: none; margin-bottom: 0.5rem;">Fake Account Detection</h3>
@@ -166,10 +179,17 @@
                         <span class="tech-tag">Machine Learning</span>
                         <span class="tech-tag">Python</span>
                     </div>
-                    <a href="https://github.com/Saathwikmanthri/Fake-Social-Media-Accounts-Detection" target="_blank" class="github-link"><i class="fab fa-github" style="margin:0; font-size: 1.2rem;"></i> Source Code</a>
+                    <div style="display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; flex-wrap: wrap;" onclick="event.stopPropagation()">
+                        <button onclick="openProjectModal('fake-account-detection')" class="btn" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: rgba(138, 43, 226, 0.2); border-color: rgba(138, 43, 226, 0.5);">
+                            DEEP DIVE &rarr;
+                        </button>
+                        <a href="https://github.com/Saathwikmanthri/Fake-Social-Media-Accounts-Detection" target="_blank" class="github-link" style="margin: 0;">
+                            <i class="fab fa-github" style="margin:0; font-size: 1.1rem;"></i> Source Code
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="card project-card animate stagger-3">
+            <div class="card project-card animate stagger-3" style="cursor: pointer;" onclick="openProjectModal('ai-health-diagnosis')">
                 <img src="ai_health_tech_v2.png" alt="AI Health Diagnosis Mockup" class="project-img">
                 <div class="project-info">
                     <h3 style="font-size: 1.25rem; text-transform: none; margin-bottom: 0.5rem;">AI Health Diagnosis</h3>
@@ -179,10 +199,17 @@
                         <span class="tech-tag">Data Science</span>
                         <span class="tech-tag">Web App</span>
                     </div>
-                    <a href="https://github.com/PRUDHVI0143/Ai-health-diagnosis" target="_blank" class="github-link"><i class="fab fa-github" style="margin:0; font-size: 1.2rem;"></i> Source Code</a>
+                    <div style="display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; flex-wrap: wrap;" onclick="event.stopPropagation()">
+                        <button onclick="openProjectModal('ai-health-diagnosis')" class="btn" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: rgba(138, 43, 226, 0.2); border-color: rgba(138, 43, 226, 0.5);">
+                            DEEP DIVE &rarr;
+                        </button>
+                        <a href="https://github.com/PRUDHVI0143/Ai-health-diagnosis" target="_blank" class="github-link" style="margin: 0;">
+                            <i class="fab fa-github" style="margin:0; font-size: 1.1rem;"></i> Source Code
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="card project-card animate stagger-1">
+            <div class="card project-card animate stagger-1" style="cursor: pointer;" onclick="openProjectModal('f-zon3')">
                 <img src="f_zon3_mockup2.png" class="project-img" alt="F_Zon3 screenshot">
                 <div class="project-info">
                     <h3 style="font-size: 1.25rem; text-transform: none; margin-bottom: 0.5rem;">F_ZON3</h3>
@@ -192,7 +219,74 @@
                         <span class="tech-tag">JavaScript</span>
                         <span class="tech-tag">Game Logic</span>
                     </div>
-                    <a href="https://github.com/PRUDHVI0143/F_Zon3" target="_blank" class="github-link"><i class="fab fa-github" style="margin:0; font-size: 1.2rem;"></i> Source Code</a>
+                    <div style="display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; flex-wrap: wrap;" onclick="event.stopPropagation()">
+                        <button onclick="openProjectModal('f-zon3')" class="btn" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: rgba(138, 43, 226, 0.2); border-color: rgba(138, 43, 226, 0.5);">
+                            DEEP DIVE &rarr;
+                        </button>
+                        <a href="https://github.com/PRUDHVI0143/F_Zon3" target="_blank" class="github-link" style="margin: 0;">
+                            <i class="fab fa-github" style="margin:0; font-size: 1.1rem;"></i> Source Code
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card project-card animate stagger-2" style="cursor: pointer;" onclick="openProjectModal('spotlite')">
+                <img src="spotlite_mockup.jpg" class="project-img" alt="Spotlite Mockup">
+                <div class="project-info">
+                    <h3 style="font-size: 1.25rem; text-transform: none; margin-bottom: 0.5rem;">Spotlite</h3>
+                    <p style="font-size: 0.85rem; color: #ddd; line-height: 1.5; margin-bottom: 1rem;">Real-time developer monitoring and code analytics dashboard engineered to track execution metrics, API request latencies, and deployment pipelines with glassmorphism UI widgets.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Full-Stack</span>
+                        <span class="tech-tag">Analytics</span>
+                        <span class="tech-tag">Developer Tools</span>
+                    </div>
+                    <div style="display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; flex-wrap: wrap;" onclick="event.stopPropagation()">
+                        <button onclick="openProjectModal('spotlite')" class="btn" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: rgba(138, 43, 226, 0.2); border-color: rgba(138, 43, 226, 0.5);">
+                            DEEP DIVE &rarr;
+                        </button>
+                        <a href="https://github.com/PRUDHVI0143/Spotlite" target="_blank" class="github-link" style="margin: 0;">
+                            <i class="fab fa-github" style="margin:0; font-size: 1.1rem;"></i> Source Code
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card project-card animate stagger-3" style="cursor: pointer;" onclick="openProjectModal('js-ts-compiler')">
+                <img src="compiler_mockup.jpg" class="project-img" alt="JS-TS Compiler Mockup">
+                <div class="project-info">
+                    <h3 style="font-size: 1.25rem; text-transform: none; margin-bottom: 0.5rem;">JS-TS Compiler</h3>
+                    <p style="font-size: 0.85rem; color: #ddd; line-height: 1.5; margin-bottom: 1rem;">JavaScript to TypeScript code transformer and compiler parsing raw source code, constructing Abstract Syntax Trees (AST), and inferring strict TypeScript interfaces.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Compiler Design</span>
+                        <span class="tech-tag">TypeScript</span>
+                        <span class="tech-tag">AST Parser</span>
+                    </div>
+                    <div style="display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; flex-wrap: wrap;" onclick="event.stopPropagation()">
+                        <button onclick="openProjectModal('js-ts-compiler')" class="btn" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: rgba(138, 43, 226, 0.2); border-color: rgba(138, 43, 226, 0.5);">
+                            DEEP DIVE &rarr;
+                        </button>
+                        <a href="https://github.com/PRUDHVI0143/JS-TS-compiler" target="_blank" class="github-link" style="margin: 0;">
+                            <i class="fab fa-github" style="margin:0; font-size: 1.1rem;"></i> Source Code
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card project-card animate stagger-1" style="cursor: pointer;" onclick="openProjectModal('vc-soul')">
+                <img src="vcsoul_mockup.jpg" class="project-img" alt="Vc_Soul-0.2 Mockup">
+                <div class="project-info">
+                    <h3 style="font-size: 1.25rem; text-transform: none; margin-bottom: 0.5rem;">Vc_Soul-0.2</h3>
+                    <p style="font-size: 0.85rem; color: #ddd; line-height: 1.5; margin-bottom: 1rem;">Advanced Voice AI & Speech Intelligence platform providing real-time audio FFT frequency analysis, neural voice activity graphs, tonal sentiment analysis, and speaker ID scoring.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Voice AI</span>
+                        <span class="tech-tag">Audio Processing</span>
+                        <span class="tech-tag">Speech Analytics</span>
+                    </div>
+                    <div style="display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; flex-wrap: wrap;" onclick="event.stopPropagation()">
+                        <button onclick="openProjectModal('vc-soul')" class="btn" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: rgba(138, 43, 226, 0.2); border-color: rgba(138, 43, 226, 0.5);">
+                            DEEP DIVE &rarr;
+                        </button>
+                        <a href="https://github.com/PRUDHVI0143/Vc_Soul-0.2" target="_blank" class="github-link" style="margin: 0;">
+                            <i class="fab fa-github" style="margin:0; font-size: 1.1rem;"></i> Source Code
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -506,7 +600,16 @@
         <div id="modal-caption" class="cert-modal-caption"></div>
     </div>
 
+    <!-- Project Architecture Deep Dive Modal -->
+    <div id="project-modal" class="project-modal" onclick="closeProjectModalOnBg(event)">
+        <div class="project-modal-content">
+            <span class="project-modal-close" onclick="closeProjectModal()">&times;</span>
+            <div id="project-modal-body"></div>
+        </div>
+    </div>
+
     <script src="milkyway.js"></script>
+    <script src="three-scroll-engine.js"></script>
     <script src="gravity-effect.js"></script>
     <script src="main.js"></script>
 </body>

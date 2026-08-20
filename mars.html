@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mars — Three.js Interactive Engine</title>
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+  canvas { display: block; }
+  #info {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    color: #e8b090;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    letter-spacing: 1px;
+    opacity: 0.85;
+    pointer-events: none;
+    text-transform: uppercase;
+    background: rgba(0,0,0,0.5);
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid rgba(232, 176, 144, 0.3);
+  }
+</style>
+</head>
+<body>
+<div id="info">Mars · Drag to Rotate · Scroll to Zoom</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// ---------- Scene setup ----------
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 1.2, 5.5);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+document.body.appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.minDistance = 2.5;
+controls.maxDistance = 14;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.4;
+
+// ---------- Starfield background ----------
+function createStarfield() {
+  const starGeo = new THREE.BufferGeometry();
+  const count = 4000;
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const r = 80 + Math.random() * 200;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    positions[i * 3 + 2] = r * Math.cos(phi);
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.6, sizeAttenuation: true });
+  return new THREE.Points(starGeo, starMat);
+}
+scene.add(createStarfield());
+
+// ---------- Procedural Mars texture (color + bump) ----------
+function makeMarsTextures(size = 1024) {
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size / 2;
+  const ctx = canvas.getContext('2d');
+
+  // base rust-red gradient (poles lighter/frostier, equator deeper red)
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, '#d9c3ad');   // north polar cap tint
+  grad.addColorStop(0.12, '#b5573a');
+  grad.addColorStop(0.5, '#a8461f');
+  grad.addColorStop(0.88, '#b5573a');
+  grad.addColorStop(1, '#d9c3ad');   // south polar cap tint
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // blotchy surface variation
+  for (let i = 0; i < 9000; i++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const r = Math.random() * 10 + 1;
+    const shade = Math.random();
+    let color;
+    if (shade < 0.5) color = `rgba(90,35,15,${Math.random() * 0.25})`;
+    else if (shade < 0.85) color = `rgba(190,110,70,${Math.random() * 0.2})`;
+    else color = `rgba(220,190,160,${Math.random() * 0.15})`;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // craters
+  for (let i = 0; i < 140; i++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const r = Math.random() * 14 + 3;
+    const crater = ctx.createRadialGradient(x, y, 0, x, y, r);
+    crater.addColorStop(0, 'rgba(40,15,5,0.55)');
+    crater.addColorStop(0.6, 'rgba(40,15,5,0.25)');
+    crater.addColorStop(1, 'rgba(40,15,5,0)');
+    ctx.fillStyle = crater;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // polar ice caps (solid whitish caps)
+  ctx.fillStyle = 'rgba(235,225,215,0.85)';
+  ctx.beginPath();
+  ctx.ellipse(canvas.width / 2, 8, canvas.width / 2, 22, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(canvas.width / 2, canvas.height - 8, canvas.width / 2, 22, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  const colorTex = new THREE.CanvasTexture(canvas);
+  colorTex.wrapS = THREE.RepeatWrapping;
+
+  // bump map: grayscale version of the same blotch/crater pattern
+  const bumpCanvas = document.createElement('canvas');
+  bumpCanvas.width = canvas.width; bumpCanvas.height = canvas.height;
+  const bctx = bumpCanvas.getContext('2d');
+  bctx.drawImage(canvas, 0, 0);
+  const imgData = bctx.getImageData(0, 0, bumpCanvas.width, bumpCanvas.height);
+  for (let i = 0; i < imgData.data.length; i += 4) {
+    const avg = (imgData.data[i] + imgData.data[i + 1] + imgData.data[i + 2]) / 3;
+    imgData.data[i] = imgData.data[i + 1] = imgData.data[i + 2] = avg;
+  }
+  bctx.putImageData(imgData, 0, 0);
+  const bumpTex = new THREE.CanvasTexture(bumpCanvas);
+
+  return { colorTex, bumpTex };
+}
+
+const { colorTex, bumpTex } = makeMarsTextures();
+
+// ---------- Mars mesh ----------
+const marsGeo = new THREE.SphereGeometry(1.6, 96, 96);
+const marsMat = new THREE.MeshStandardMaterial({
+  map: colorTex,
+  bumpMap: bumpTex,
+  bumpScale: 0.035,
+  roughness: 1,
+  metalness: 0
+});
+const mars = new THREE.Mesh(marsGeo, marsMat);
+scene.add(mars);
+
+// thin atmospheric glow
+const glowGeo = new THREE.SphereGeometry(1.66, 64, 64);
+const glowMat = new THREE.ShaderMaterial({
+  transparent: true,
+  side: THREE.BackSide,
+  uniforms: {},
+  vertexShader: `
+    varying vec3 vNormal;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vNormal;
+    void main() {
+      float intensity = pow(0.55 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.5);
+      gl_FragColor = vec4(0.9, 0.45, 0.25, 1.0) * intensity;
+    }
+  `
+});
+const glow = new THREE.Mesh(glowGeo, glowMat);
+scene.add(glow);
+
+// ---------- Lighting ----------
+const sunLight = new THREE.DirectionalLight(0xfff2e0, 2.2);
+sunLight.position.set(6, 3, 4);
+scene.add(sunLight);
+
+const ambient = new THREE.AmbientLight(0x332018, 1.1);
+scene.add(ambient);
+
+// subtle rim/fill light for the dark side
+const fill = new THREE.PointLight(0x4488ff, 0.15);
+fill.position.set(-5, -2, -3);
+scene.add(fill);
+
+// ---------- Animation loop ----------
+function animate() {
+  requestAnimationFrame(animate);
+  mars.rotation.y += 0.0009;
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+// ---------- Resize handling ----------
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
